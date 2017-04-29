@@ -9,16 +9,18 @@ import matplotlib
 matplotlib.style.use('ggplot')
 
 def process(input_dir, output_dir):
+    # check if input/output dir exists
     if not os.path.isdir(input_dir):
         print("Input directory {0} does not exist".format(input_dir))
+        return
     if not os.path.isdir(output_dir):
         print("Create output directory: {0}".format(output_dir))
         os.mkdir(output_dir)
 
     for item in os.walk(input_dir):
         path, file_list = item[0], item[2]
-        for i, file in enumerate(file_list):
-            df = pd.DataFrame.from_csv(os.path.join(path, file), index_col=3).iloc[:, 3:4]
+        for file in file_list:
+            df = pd.DataFrame.from_csv(os.path.join(path, file), index_col=3).iloc[:, 3:]
             df = df.rename(columns = {"Unnamed: 4": "Y"})
             df = df.loc[(df.index > 1.4e-05) & (df.index < 2.4e-5)]
             # save to file
